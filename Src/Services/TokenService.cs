@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using censudex_auth_service.Src.Helpers;
 using censudex_auth_service.Src.Interfaces;
 using Microsoft.Extensions.Options;

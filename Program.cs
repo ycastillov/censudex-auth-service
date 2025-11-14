@@ -1,8 +1,31 @@
+using censudex_auth_service.Src.Helpers;
+using censudex_auth_service.Src.Interfaces;
+using censudex_auth_service.Src.Services;
+using Grpc.Net.Client;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+
+// JWT Settings
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+
+// Services
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddSingleton<ILogoutService, LogoutService>();
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+
+// gRPC client (Client Service)
+// builder.Services.AddSingleton(sp =>
+// {
+//     var config = sp.GetRequiredService<IConfiguration>();
+//     var channel = GrpcChannel.ForAddress(config["Grpc:ClientsService"]);
+//     return new Clients.ClientsClient(channel); // generado desde .proto
+// });
 
 var app = builder.Build();
 
