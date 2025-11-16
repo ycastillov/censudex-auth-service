@@ -3,6 +3,7 @@ using censudex_auth_service.Src.Interfaces;
 using censudex_auth_service.Src.Services;
 using ClientsService.Grpc;
 using Grpc.Net.Client;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,11 @@ builder.Services.AddOpenApi();
 
 // JWT Settings
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
+
+var redis = ConnectionMultiplexer.Connect(
+    builder.Configuration.GetConnectionString("Redis:Connection")!
+);
+builder.Services.AddSingleton<IConnectionMultiplexer>(redis);
 
 // Services
 builder.Services.AddScoped<ITokenService, TokenService>();
