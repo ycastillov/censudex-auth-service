@@ -1,6 +1,7 @@
 using censudex_auth_service.Src.Helpers;
 using censudex_auth_service.Src.Interfaces;
 using censudex_auth_service.Src.Services;
+using ClientsService.Grpc;
 using Grpc.Net.Client;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,13 +20,13 @@ builder.Services.AddSingleton<ILogoutService, LogoutService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// gRPC client (Client Service)
-// builder.Services.AddSingleton(sp =>
-// {
-//     var config = sp.GetRequiredService<IConfiguration>();
-//     var channel = GrpcChannel.ForAddress(config["Grpc:ClientsService"]);
-//     return new Clients.ClientsClient(channel); // generado desde .proto
-// });
+builder.Services.AddSingleton(sp =>
+{
+    var config = sp.GetRequiredService<IConfiguration>();
+    return new ClientsGrpc.ClientsGrpcClient(
+        GrpcChannel.ForAddress(config["Grpc:ClientsService"]!)
+    );
+});
 
 var app = builder.Build();
 
