@@ -1,3 +1,5 @@
+using System.Security.Claims;
+
 namespace censudex_auth_service.Src.Interfaces
 {
     /// <summary>
@@ -12,5 +14,12 @@ namespace censudex_auth_service.Src.Interfaces
         /// <param name="role">El rol del usuario.</param>
         /// <returns>Un token JWT como cadena.</returns>
         string GenerateToken(Guid userId, string role);
+
+        /// <summary>
+        /// Valida un token JWT y devuelve el principal de seguridad asociado si es válido.
+        /// </summary>
+        /// <param name="token">El token JWT a validar.</param>
+        /// <returns>Un ClaimsPrincipal si el token es válido; de lo contrario, null.</returns>
+        ClaimsPrincipal? ValidateToken(string token);
     }
 }

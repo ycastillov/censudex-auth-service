@@ -12,10 +12,16 @@ namespace censudex_auth_service.Src.Services
     /// Servicio para la generación de tokens JWT.
     /// </summary>
     /// <typeparam name="JwtSettings">Configuración de JWT.</typeparam>
-    public class TokenService(IOptions<JwtSettings> jwtOptions) : ITokenService
+    public class TokenService(
+        IOptions<JwtSettings> jwtOptions,
+        TokenValidationParameters validationParameters,
+        ILogoutService logoutService
+    ) : ITokenService
     {
         // Configuración de JWT inyectada
         private readonly JwtSettings _jwtSettings = jwtOptions.Value;
+        private readonly TokenValidationParameters _validationParameters = validationParameters;
+        private readonly ILogoutService _logoutService = logoutService;
 
         public string GenerateToken(Guid userId, string role)
         {
@@ -38,6 +44,37 @@ namespace censudex_auth_service.Src.Services
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public ClaimsPrincipal? ValidateToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+
+            try
+            {
+                var principal = handler.ValidateToken(
+                    token,
+                    _validationParameters,
+                    out var validatedToken
+                );
+
+                // Extraer jti (puede venir como claim "jti" o JwtRegisteredClaimNames.Jti)
+                var jti =
+                    principal.FindFirst("jti")?.Value
+                    ?? principal.FindFirst(JwtRegisteredClaimNames.Jti)?.Value;
+                if (string.IsNullOrEmpty(jti))
+                    return null;
+
+                // Comprobar blocklist (LogoutService espera jti, no token completo)
+                if (_logoutService.IsTokenBlocked(jti))
+                    return null;
+
+                return principal;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

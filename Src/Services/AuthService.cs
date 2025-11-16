@@ -30,18 +30,22 @@ namespace censudex_auth_service.Src.Services
                     new() { Identifier = loginRequest.UsernameOrEmail }
                 );
 
-                if (clientsResponse == null)
-                {
-                    return await Task.FromResult<LoginResponseDTO?>(null);
-                }
+                // Verificar si el cliente existe y está activo
+                if (clientsResponse == null || string.IsNullOrEmpty(clientsResponse.Id))
+                    throw new Exception("Cliente no encontrado");
+
+                if (!clientsResponse.IsActive)
+                    throw new Exception("Cliente no está activo");
 
                 // Obtener hash y comparar
+                if (!BCrypt.Net.BCrypt.Verify(loginRequest.Password, clientsResponse.PasswordHash))
+                    throw new Exception("Contraseña inválida");
 
                 // Convertir id (string) a Guid si GenerateToken espera Guid
+
                 if (!Guid.TryParse(clientsResponse.Id, out var clientGuid))
                 {
-                    // id inválido
-                    return await Task.FromResult<LoginResponseDTO?>(null);
+                    throw new Exception("Id de cliente inválido");
                 }
 
                 var token = _tokenService.GenerateToken(clientGuid, "customer");
@@ -53,10 +57,10 @@ namespace censudex_auth_service.Src.Services
                     Role = "customer",
                 };
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // Manejo de errores (registro, rethrow, etc.)
-                throw;
+                throw new Exception("Error durante el inicio de sesión: " + ex.Message);
             }
         }
 

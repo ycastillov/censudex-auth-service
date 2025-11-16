@@ -11,8 +11,8 @@ service ClientsGrpc {
   rpc UpdateClient (UpdateClientRequest) returns (ClientResponse);
   rpc DeactivateClient (DeactivateClientRequest) returns (ClientResponse);
 
-  // Auth Service helper
-  rpc GetClientByIdentifier (GetClientByIdentifierRequest) returns (ClientResponse);
+  // Auth Service helpers
+  rpc GetClientByIdentifier (GetClientByIdentifierRequest) returns (AuthClientResponse);
 }
 
 message GetClientsRequest {
@@ -66,6 +66,14 @@ message ClientResponse {
   string address = 6;
   string phoneNumber = 7;
   bool isActive = 8;
+}
+
+message AuthClientResponse {
+  string id = 1;
+  string email = 2;
+  string username = 3;
+  bool isActive = 4;
+  string passwordHash = 5;
 }
 
 message ClientsListResponse {

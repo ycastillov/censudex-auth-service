@@ -17,5 +17,12 @@ namespace censudex_auth_service.Src.Interfaces
         /// <param name="loginRequest">DTO con la información de inicio de sesión.</param>
         /// <returns>DTO con la respuesta del inicio de sesión.</returns>
         Task<LoginResponseDTO?> LoginAsync(LoginRequestDTO loginRequest);
+
+        /// <summary>
+        /// Realiza el proceso de cierre de sesión.
+        /// </summary>
+        /// <param name="token">Token JWT a bloquear.</param>
+        /// <returns>Indica si el cierre de sesión fue exitoso.</returns>
+        bool Logout(string token);
     }
 }
