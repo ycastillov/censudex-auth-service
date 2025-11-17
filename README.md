@@ -77,7 +77,7 @@ censudex-auth-service/
 ## 1. Clonar el repositorio
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/ycastillov/censudex-auth-service.git
 cd censudex-auth-service
 ```
 
@@ -185,8 +185,8 @@ Es responsabilidad del ClientService devolver:
 
 ```json
 {
-  "usernameOrEmail": "admin@mail.com",
-  "password": "admin123"
+    "UsernameOrEmail": "juanperez3",
+    "password": "SecurePassword123!"
 }
 ```
 
@@ -218,7 +218,8 @@ Authorization: Bearer <token>
 {
   "isValid": true,
   "userId": "GUID",
-  "role": "CLIENT"
+  "role": "CLIENT",
+  "message": "Token válido"
 }
 ```
 
@@ -232,6 +233,14 @@ Headers:
 
 ```
 Authorization: Bearer <token>
+```
+
+### Response OK
+
+```json
+{
+    "message": "Cierre de sesión exitoso"
+}
 ```
 
 ---
