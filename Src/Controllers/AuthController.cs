@@ -74,6 +74,7 @@ namespace censudex_auth_service.Src.Controllers
                     IsValid = true,
                     UserId = userId,
                     Role = role,
+                    Message = "Token válido",
                 }
             );
         }

@@ -24,6 +24,5 @@ namespace censudex_auth_service.Src.DTOs
         /// Mensaje adicional relacionado con la validación del token.
         /// </summary>
         public string? Message { get; set; } = string.Empty;
-        public bool Valid { get; internal set; }
     }
 }
