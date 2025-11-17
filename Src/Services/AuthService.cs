@@ -48,18 +48,19 @@ namespace censudex_auth_service.Src.Services
                     throw new Exception("Id de cliente inválido");
                 }
 
-                var token = _tokenService.GenerateToken(clientGuid, "customer");
+                var role = clientsResponse.Role;
+
+                var token = _tokenService.GenerateToken(clientGuid, role);
 
                 return new LoginResponseDTO
                 {
                     Token = token,
                     UserId = clientGuid.ToString(),
-                    Role = "customer",
+                    Role = role,
                 };
             }
             catch (Exception ex)
             {
-                // Manejo de errores (registro, rethrow, etc.)
                 throw new Exception("Error durante el inicio de sesión: " + ex.Message);
             }
         }

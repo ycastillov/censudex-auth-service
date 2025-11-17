@@ -66,6 +66,7 @@ message ClientResponse {
   string address = 6;
   string phoneNumber = 7;
   bool isActive = 8;
+  string role = 9;
 }
 
 message AuthClientResponse {
@@ -74,6 +75,7 @@ message AuthClientResponse {
   string username = 3;
   bool isActive = 4;
   string passwordHash = 5;
+  string role = 6;
 }
 
 message ClientsListResponse {
